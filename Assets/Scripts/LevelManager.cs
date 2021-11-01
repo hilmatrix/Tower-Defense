@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
     private static LevelManager _instance = null;
     private List<Tower> _spawnedTowers = new List<Tower>();
     private List<Bullet> _spawnedBullets = new List<Bullet>();
+    private List<Explosion> _spawnedExplosion = new List<Explosion>();
     public bool IsOver { get; private set; }
 
     public static LevelManager Instance {
@@ -162,7 +163,27 @@ public class LevelManager : MonoBehaviour
         if (!_spawnedBullets.Contains(newBullet)) {
             _spawnedBullets.Add(newBullet);
         }
+
         return newBullet;
+    }
+
+    public Explosion GetExplosionFromPool(Explosion prefab) {
+        GameObject newExplosionObj = _spawnedExplosion.Find(
+            b => !b.gameObject.activeSelf && b.name.Contains(prefab.name)
+        )?.gameObject;
+
+        if (newExplosionObj == null) {
+            newExplosionObj = Instantiate(prefab.gameObject);
+        }
+
+        Explosion newExplosion = newExplosionObj.GetComponent<Explosion>();
+        if (!_spawnedExplosion.Contains(newExplosion)) {
+            _spawnedExplosion.Add(newExplosion);
+        }
+
+        Debug.Log("newExplosion = " + newExplosion);
+
+        return newExplosion;
     }
 
     public void ExplodeAt(Vector2 point, float radius, int damage) {

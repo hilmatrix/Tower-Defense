@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     private int _bulletPower;
     private float _bulletSpeed;
     private float _bulletSplashRadius;
+    public Explosion _explosionPrefab;
 
     private Enemy _targetEnemy;
 
@@ -52,6 +53,10 @@ public class Bullet : MonoBehaviour
             else {
                 _targetEnemy.ReduceEnemyHealth(_bulletPower);
             }
+            Explosion explosion = LevelManager.Instance.GetExplosionFromPool(_explosionPrefab);
+            explosion.transform.position = transform.position;
+            explosion.ResetExplosion();
+            explosion.gameObject.SetActive(true);
             _targetEnemy = null;
         }
     }
